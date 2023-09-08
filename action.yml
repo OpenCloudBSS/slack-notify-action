@@ -1,0 +1,96 @@
+name: 'Slack notify action'
+description: 'Slack notify action'
+inputs:
+  slack-channel-id:
+    description: 'Slack channel id'
+    required: true
+  slack-bot-token:
+    description: 'Slack bot token'
+    required: true
+  github-repository:
+    description: 'Github repository'
+    required: true
+  job-name:
+    description: 'Job name'
+    required: true
+  job-status:
+    description: 'Job status'
+    required: true
+  github-server-url:
+    description: 'Github server url'
+    required: true
+  ref-name:
+    description: 'Ref name'
+    required: true
+  commit-message:
+    description: 'Commit message'
+    required: true
+  run-id:
+    description: 'Run id'
+    required: true
+  event-name:
+    description: 'Event name'
+    required: true
+  workflow:
+    description: 'Workflow'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Send notification to Slack
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        channel-id: ${{ inputs.slack-channel-id }}
+        payload: |
+          {
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "Github Action Completed - ${{ inputs.github-repository }} - ${{ inputs.job-name }}"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "${{ env.IMAGE_STATUS }} *${{ input.job-status }}*"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "<${{ inputs.github-server-url }}/${{ inputs.github-repository }}|${{ inputs.github-repository }}>"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": ${{ toJSON(inputs.commit-message) }}
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "<${{ inputs.github-server-url }}/${{ inputs.github-repository }}|${{ inputs.github-repository }}> ${{ inputs.ref-name }}"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "Workflow run: <${{ inputs.github-server-url }}/${{ inputs.github-repository }}/actions/runs/${{ inputs.run-id }}|${{ inputs.workflow }}: ${{ inputs.event-name }}>"
+                }
+              },
+              {
+                "type": "divider"
+              }
+            ]
+          }
+        env:
+          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
+          IMAGE_STATUS: ${{ inputs.job-status == 'success' && ':heavy_check_mark:' || ':x:' }}
