@@ -4,7 +4,7 @@ inputs:
   slack-channel-id:
     description: 'Slack channel id'
     required: true
-  slack-bot-token:
+  slack_bot_token:
     description: 'Slack bot token'
     required: true
   github-repository:
@@ -13,7 +13,7 @@ inputs:
   job-name:
     description: 'Job name'
     required: true
-  job-status:
+  job_status:
     description: 'Job status'
     required: true
   github-server-url:
@@ -34,11 +34,15 @@ inputs:
   workflow:
     description: 'Workflow'
     required: true
+
 runs:
   using: "composite"
   steps:
     - name: Send notification to Slack
       uses: slackapi/slack-github-action@v1.23.0
+      env:
+        SLACK_BOT_TOKEN: ${{ inputs.slack_bot_token }}
+        IMAGE_STATUS: ${{ inputs.job_status == 'success' && ':heavy_check_mark:' || ':x:' }}
       with:
         channel-id: ${{ inputs.slack-channel-id }}
         payload: |
@@ -55,7 +59,7 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ env.IMAGE_STATUS }} *${{ inputs.job-status }}*"
+                  "text": "${{ env.IMAGE_STATUS }} *${{ inputs.job_status }}*"
                 }
               },
               {
@@ -91,6 +95,3 @@ runs:
               }
             ]
           }
-        env:
-          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
-          IMAGE_STATUS: ${{ inputs.job-status == 'success' && ':heavy_check_mark:' || ':x:' }}
