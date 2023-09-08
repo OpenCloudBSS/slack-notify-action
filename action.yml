@@ -48,14 +48,14 @@ runs:
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "Github Action Completed - ${{ inputs.github-repository }} - ${{ inputs.job-name }}"
+                  "text": "Github Action Completed - ${{ inputs.github-repository }} - ${{ inputs.job-name }} ??? ${{ github.repository }}"
                 }
               },
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ env.IMAGE_STATUS }} *${{ input.job-status }}*"
+                  "text": "${{ env.IMAGE_STATUS }} *${{ inputs.job-status }}*"
                 }
               },
               {
