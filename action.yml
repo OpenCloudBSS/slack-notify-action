@@ -19,6 +19,7 @@ runs:
       env:
         SLACK_BOT_TOKEN: ${{ inputs.slack_bot_token }}
         IMAGE_STATUS: ${{ job.status == 'success' && ':heavy_check_mark:' || ':x:' }}
+        MESSAGE: ${{ github.event.head_commit.message == '' && 'Empty' || github.event.head_commit.message }}
       with:
         channel-id: ${{ inputs.slack_channel_id }}
         payload: |
@@ -35,7 +36,7 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ env.IMAGE_STATUS }} *${{ job.status }}*"
+                  "text": "${{ job.status == 'success' && ':heavy_check_mark:' || ':x:' }} *${{ job.status }}*"
                 }
               },
               {
@@ -43,13 +44,6 @@ runs:
                 "text": {
                   "type": "mrkdwn",
                   "text": "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>"
-                }
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": ${{ toJSON(github.event.head_commit.message) }}
                 }
               },
               {
