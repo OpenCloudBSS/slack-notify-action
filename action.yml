@@ -7,6 +7,9 @@ inputs:
   slack_bot_token:
     description: 'Slack bot token'
     required: true
+  context_name:
+    description: 'Context name'
+    required: false
 
 runs:
   using: "composite"
@@ -25,7 +28,7 @@ runs:
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "Github Action Completed - ${{ github.repository }} - ${{ github.job }}"
+                  "text": "Github Action Completed - ${{ github.repository }} - ${{inputs.context_name}} ${{ github.job }}"
                 }
               },
               {
