@@ -48,7 +48,7 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": ${{ github.event.head_commit.message == '' && 'Empty' || toJSON(github.event.head_commit.message) }}
+                  "text": ${{ github.event.head_commit.message == '' && toJSON('Empty') || toJSON(github.event.head_commit.message) }}
                 }
               },
               {
