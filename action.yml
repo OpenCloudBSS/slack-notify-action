@@ -15,7 +15,7 @@ runs:
       uses: slackapi/slack-github-action@v1.23.0
       env:
         SLACK_BOT_TOKEN: ${{ inputs.slack_bot_token }}
-        IMAGE_STATUS: ${{ job.status }} == 'success' && ':heavy_check_mark:' || ':x:' }}
+        IMAGE_STATUS: ${{ job.status == 'success' && ':heavy_check_mark:' || ':x:' }}
       with:
         channel-id: ${{ inputs.slack_channel_id }}
         payload: |
