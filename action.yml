@@ -1,35 +1,11 @@
 name: 'Slack notify action'
 description: 'Slack notify action'
 inputs:
-  slack-channel-id:
+  slack_channel_id:
     description: 'Slack channel id'
     required: true
   slack_bot_token:
     description: 'Slack bot token'
-    required: true
-  github-repository:
-    description: 'Github repository'
-    required: true
-  job-name:
-    description: 'Job name'
-    required: true
-  github-server-url:
-    description: 'Github server url'
-    required: true
-  ref-name:
-    description: 'Ref name'
-    required: true
-  commit-message:
-    description: 'Commit message'
-    required: true
-  run-id:
-    description: 'Run id'
-    required: true
-  event-name:
-    description: 'Event name'
-    required: true
-  workflow:
-    description: 'Workflow'
     required: true
 
 runs:
@@ -49,7 +25,7 @@ runs:
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "Github Action Completed - ${{ inputs.github-repository }} - ${{ inputs.job-name }} ??? ${{ github.repository }}"
+                  "text": "Github Action Completed - ${{ github.repository }} - ${{ github.job }}"
                 }
               },
               {
@@ -63,28 +39,28 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "<${{ inputs.github-server-url }}/${{ inputs.github-repository }}|${{ inputs.github-repository }}>"
+                  "text": "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>"
                 }
               },
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": ${{ toJSON(inputs.commit-message) }}
+                  "text": ${{ toJSON(github.event.head_commit.message) }}
                 }
               },
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "<${{ inputs.github-server-url }}/${{ inputs.github-repository }}|${{ inputs.github-repository }}> ${{ inputs.ref-name }}"
+                  "text": "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> ${{ github.ref_name }}"
                 }
               },
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Workflow run: <${{ inputs.github-server-url }}/${{ inputs.github-repository }}/actions/runs/${{ inputs.run-id }}|${{ inputs.workflow }}: ${{ inputs.event-name }}>"
+                  "text": "Workflow run: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }}: ${{ github.event_name }}>"
                 }
               },
               {
